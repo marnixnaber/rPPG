@@ -1,12 +1,20 @@
-run in matlab version 2014b or younger
+run in matlab version 2014b or younger. 
 
-for a demo, type in Matlab command:
+To get the scripts to work, first download the fastica (version 2.5) matlab scripts
+by Hugo Gävert, Jarmo Hurri, Jaakko Särelä, and Aapo Hyvärinen:
 
-rPPG();
+https://github.com/aludnam/MATLAB/tree/master/FastICA_25
+
+
+
+For a demo, type in Matlab command:
+
+RunMe
+
 
 % -----------------ACKNOWLEDGMENT-------------------
-% van der Kooij & Naber (2017). Standardized procedures for the testing and 
-% reporting of remote heart rate imaging. Journal title, etc.
+% van der Kooij & Naber (2018). Standardized procedures for the testing and 
+% reporting of remote heart rate imaging. Behavior Research Methods
 %
 %
 % -----------------CONTACT-------------------
@@ -15,6 +23,16 @@ rPPG();
 % please contact: marnixnaber@gmail.com
 %
 %
+% -----------------PARAMETERS-------------------
+%
+% Below you can vary the parameters for the signal processing steps (e.g.
+% frequency filtering).
+% 
+% In the "extractFaceFromVideo.m" file you will find more parameters that
+% can be adjusted (e.g., sensitivity to detect faces, number of points to
+% track the face, and method to detect skin pixels)
+%
+
 % --------LICENSE & ACKNOWLEDGMENT-----------
 % 
 % Copyright © 2017 Marnix Naber, The Netherlands
