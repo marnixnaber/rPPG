@@ -1,4 +1,4 @@
-function [faceIm,skinImB_3] = selectFaceTemplate(skinDetection, Im) 
+function [faceIm,skinImB_3] = selectFaceTemplateNoEyes(skinDetection, Im) 
 
 
 xyCoor = round([min(skinDetection.bboxPolygon(1:2:end)) min(skinDetection.bboxPolygon(2:2:end)) max(skinDetection.bboxPolygon(1:2:end)) max(skinDetection.bboxPolygon(2:2:end))]);
@@ -50,6 +50,8 @@ gridDeselIdx = [gridDeselIdx skinDetection.nFaceSectors*(shrinkFactorH+1)-shrink
 gridDeselIdx = [gridDeselIdx skinDetection.nFaceSectors*(shrinkFactorH+2)]; % bottom-left corner
 gridDeselIdx = [gridDeselIdx skinDetection.nFaceSectors^2-skinDetection.nFaceSectors*(shrinkFactorH+1)+1:skinDetection.nFaceSectors^2-skinDetection.nFaceSectors*(shrinkFactorH+1)+shrinkFactorV]; % top-right
 gridDeselIdx = [gridDeselIdx skinDetection.nFaceSectors^2-skinDetection.nFaceSectors*(shrinkFactorH+2)+1]; % top-right corner
+gridDeselIdx = [gridDeselIdx skinDetection.nFaceSectors+ceil(skinDetection.nFaceSectors*0.4):skinDetection.nFaceSectors:skinDetection.nFaceSectors^2]; % eyes
+gridDeselIdx = [gridDeselIdx skinDetection.nFaceSectors+ceil(skinDetection.nFaceSectors*0.5):skinDetection.nFaceSectors:skinDetection.nFaceSectors^2]; % eyes
 
 
 

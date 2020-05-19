@@ -30,15 +30,18 @@ faceTracking.minPoints              = 10;       % minimal points that need to be
 
 skinDetection                   = struct;
 skinDetection.nFaceSectors          = 12;       % number of row/column sectors that can be selected in the face as skin (8x8 = 64)
-skinDetection.method                = 1;        % [0 1 2]; 
-% 0 = preset template segmentation of face to remove background pixel.
-% Disadvantage: template is not adjusted to horizontal or vertical head angle
+skinDetection.method                = 1;        % [0 1 2 3]; 
+% 0 = preset template segmentation of face to remove background pixels.
+% Disadvantage: not every face has the same shape
+
+% 1 = preset template segmentation of face WITHOUT eyes and WITHOUT background pixels.
+% Disadvantage: not every face has the same shape
 %
-% 1 = automatic selection of skin pixels through k-means color clustering
+% 2 = automatic selection of skin pixels through k-means color clustering
 % Advantage of detecting skin every frame is that skin is detected independent of head angle.
 % Disadvantage of detecting skin every frame is that it takes time to calculate.
 %
-% 2 = manual selection of skin pixels through hue and saturation range selection;
+% 3 = manual selection of skin pixels through hue and saturation range selection;
 % Disadvantage is that you have to manually set the hue and saturation range.
     skinDetection.nColorClusters    = 4;        % [#]; Number of color clusters to look for
     skinDetection.calcFrameRate     = 0;        % [# frames]; 0 = calculate template only for first frame, 1 = refresh template every frame, 2> every X frames --> the larger the number, the faster the computation of HR
@@ -244,6 +247,7 @@ for f = 1:round(vidInfo.nFrames_sel) % loop through each image frame to calculat
         end
         
         if showSel
+            
             % Insert the bounding box around the object being tracked
             ImDisp = insertShape(Im, 'FilledPolygon', faceTracking.bboxPolygon,'Opacity',0.4);
 
@@ -251,11 +255,14 @@ for f = 1:round(vidInfo.nFrames_sel) % loop through each image frame to calculat
             ImDisp = insertMarker(ImDisp, faceTracking.visiblePoints, '+','Color', 'white');
         end
     else
-        
         faceTracking.enoughPointsVisible = 0;
+        
+        if showSel
+            ImDisp = Im;
+        end
     end
     
-    if showSel
+    if showSel & faceDetection.nFacesDetected > 0 & faceTracking.active
         textString = {
             ['# Faces detected: ' num2str(faceDetection.nFacesDetected)],...
             ['Threshold:' num2str(faceDetection.threshold)],...
@@ -290,6 +297,9 @@ for f = 1:round(vidInfo.nFrames_sel) % loop through each image frame to calculat
         else
             faceDetection.warningMess = 0; % everything ok
         end
+    else
+        faceDetection.warningMess = 3; % no face detected
+        warningText = 'Face is not detected.';
     end
     
     % show warning in image
@@ -308,9 +318,11 @@ for f = 1:round(vidInfo.nFrames_sel) % loop through each image frame to calculat
         
         if skinDetection.method == 0 % predefined template
             [faceIm,skinImB_3] = selectFaceTemplate(skinDetection, Im);
-        elseif skinDetection.method == 1 % template based on k-clustering of colors
+        elseif skinDetection.method == 1 % predefined template
+            [faceIm,skinImB_3] = selectFaceTemplateNoEyes(skinDetection, Im);
+        elseif skinDetection.method == 2 % template based on k-clustering of colors
             [skinDetection,faceIm,skinImB_3] = selectFaceTemplateColorCluster(skinDetection, Im);
-        elseif skinDetection.method == 2 % template based on manual setting of hue and saturation ranges
+        elseif skinDetection.method == 3 % template based on manual setting of hue and saturation ranges
             [skinDetection,faceIm,skinImB_3] = selectFaceTemplateManualHueSaturationSelection(skinDetection, Im);
         end
         
@@ -345,7 +357,9 @@ for f = 1:round(vidInfo.nFrames_sel) % loop through each image frame to calculat
 
 %% show video frame 
     
-    if showSel
+    if showSel & faceDetection.nFacesDetected > 0 & faceTracking.active
+        figure(1);
+            
         imshow(ImDisp)
         drawnow;
         clear ImDisp
