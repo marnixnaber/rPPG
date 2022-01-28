@@ -17,12 +17,11 @@ See "RunMe.m" for an example code. Just run it, select one or more videos, and o
 
 > Please cite our work in case you use our implementation!
 
-![Example of face detection and tracking](https://github.com/marnixnaber/rPPG/blob/main/images/RPPG_image_output.png)
+![Example of face detection and tracking](https://github.com/marnixnaber/rPPG/blob/master/images/RPPG_image_output.png)
 
-![Example of time frequency analysis](https://github.com/marnixnaber/rPPG/blob/main/images/RPPG_TFA.png)
+![Example of time frequency analysis](https://github.com/marnixnaber/rPPG/blob/master/images/RPPG_TFA.png)
 
-![Example of heart rate as a function of video time](https://github.com/marnixnaber/rPPG/blob/main/images/RPPG_HR_time.png)
-
+![Example of heart rate as a function of video time](https://github.com/marnixnaber/rPPG/blob/master/images/RPPG_HR_time.png)
 
 ## Reference:
 
