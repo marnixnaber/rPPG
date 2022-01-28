@@ -29,9 +29,22 @@ van der Kooij & Naber (2018). Standardized procedures for the testing and report
 
 http://link.springer.com/article/10.3758/s13428-019-01256-8
 
+If using the POS algorithm, please cite:
+Plane-orthogonal-to-skin (pos) by Wang, W., den Brinker, A. C., Stuijk, S., & de Haan, G. (2017). Algorithmic principles of remote-PPG. IEEE. Transactions on Biomedical Engineering, 64(7), 1479-1491.
+
+https://ieeexplore.ieee.org/abstract/document/7565547/
+
 
 ## Info for videos:
 Make sure that the videos have a high framerate (>20 frames per second) and lossless compression. Videos with VP8 and VP9 codecs are probably not supported and need to be converted to a lossless compression format (e.g., use ffmpeg). Resolution of the video is less relevant.
+
+
+## Settings:
+
+You can modify the parameters for the signal processing steps in the RunMe.m file.
+For example, you can choose from multiple rPPG methods, including Naber (which involves an independent component analysis and several other processing steps) or the popular POS algorithm (see acknowledgments).
+
+In the "extractFaceFromVideo.m" file you will find more parameters that can be set (e.g., sensitivity to detect faces, number of face points to track, and method to detect skin pixels from detected face).
 
 
 ## Required software:
@@ -70,9 +83,22 @@ Please contact marnixnaber@gmail.com for a commercial licence.
 
 
 ## Acknowledgments:
+
+Plane-orthogonal-to-skin (pos) algorithm by Wang, W., den Brinker, A. C., Stuijk, S., & de Haan, G.
+
 faceica matlab scripts by Hugo Gävert, Jarmo Hurri, Jaakko Särelä, and Aapo Hyvärinen.
 
 polyfitweighted matlab script by Salman Rogers.
+
+For more rPPG algorithms, see:
+
+MATLAB code by Daniel McDuff's in github repository:
+https://github.com/danmcduff/iphys-toolbox
+
+PYTHON code by phuselab in github repository:
+https://github.com/phuselab/pyVHR
+
+
 
 ## Contact:
 For questions, please contact marnixnaber@gmail.com
