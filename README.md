@@ -40,7 +40,7 @@ Di Lernia, D., Finotti, G., Tsakiris, M., Riva, G., & Naber, M. (2022, April 11)
 
 https://psyarxiv.com/v89zn/
 
-Also see the branch "into the wild" for an online data collection manual and adaptations to the rppg script to deal with settings more properly.
+Also see the branch "into the wild" for an online data collection manual and adaptations to the rppg script to deal with settings and video database analyses more properly (thanks to Gianluca Finotti!).
 
 
 ## Info for videos:
