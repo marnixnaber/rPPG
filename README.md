@@ -35,6 +35,14 @@ Plane-orthogonal-to-skin (pos) by Wang, W., den Brinker, A. C., Stuijk, S., & de
 https://ieeexplore.ieee.org/abstract/document/7565547/
 
 
+In case you plan to use rppg for  webcam videos collected online, then check out the following paper:
+Di Lernia, D., Finotti, G., Tsakiris, M., Riva, G., & Naber, M. (2022, April 11). Remote photoplethysmography (rPPG) in the wild: Remote heart rate imaging via online webcams. https://doi.org/10.31234/osf.io/v89zn
+
+https://psyarxiv.com/v89zn/
+
+Also see the branch "into the wild" for an online data collection manual and adaptations to the rppg script to deal with settings more properly.
+
+
 ## Info for videos:
 Make sure that the videos have a high framerate (>20 frames per second) and lossless compression. Videos with VP8 and VP9 codecs are probably not supported and need to be converted to a lossless compression format (e.g., use ffmpeg). Resolution of the video is less relevant.
 
