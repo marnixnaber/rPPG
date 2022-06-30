@@ -1,0 +1,2 @@
+plotYesNo	plotFaceFrames	makeFaceVid	videosFolder	overwriteRGB	winSize	resultsFilename	expPlotsFolder
+No	0	1	C:\Users\Gianluca\Downloads\rPPG\videos	false	10	provaForMarnix	provaForMarnix
