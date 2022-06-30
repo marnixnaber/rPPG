@@ -6,7 +6,7 @@
 %
 % van der Kooij, K.M., Naber, M. An open-source remote heart rate imaging
 % method with practical apparatus and algorithms.
-% Behav Res 51, 2106–2119 (2019).
+% Behav Res 51, 2106â€“2119 (2019).
 % https://doi.org/10.3758/s13428-019-01256-8
 
 % Below you can vary the parameters for the signal processing steps (e.g.
@@ -25,7 +25,7 @@
 
 % --------LICENSE & ACKNOWLEDGMENT-----------
 %
-% Copyright © 2017 Marnix Naber, The Netherlands
+% Copyright Â© 2017 Marnix Naber, The Netherlands
 %
 % This program is distributed under the terms of the GNU General Public
 % License (see gpl.txt)
@@ -58,8 +58,14 @@
 % script succesfully, the image processing toolbox and computer vision
 % system toolbox should be installed. This script further uses a fast
 % independent component analysis designed by
-% Hugo Gävert, Jarmo Hurri, Jaakko Särelä, and Aapo Hyvärinen
+% Hugo GÃ¤vert, Jarmo Hurri, Jaakko SÃ¤relÃ¤, and Aapo HyvÃ¤rinen
 
+mkdir('Plots')
+mkdir('Raw data')
+mkdir('results')
+mkdir('ResultsExcel')
+mkdir('videos')
+    
 %% get script folder
 clearvars -except scriptRun
 close all; clc;
