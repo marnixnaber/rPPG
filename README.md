@@ -102,7 +102,7 @@ For more rPPG algorithms, see:
 MATLAB code by Daniel McDuff's in github repository:
 https://github.com/danmcduff/iphys-toolbox
 
-PYTHON code by phuselab in github repository:
+Please note that our Matlab script runs traditional rppg algorithms. For more recent rPPG implementations, see the PYTHON-based algorithms by phuselab:
 https://github.com/phuselab/pyVHR
 
 
