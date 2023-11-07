@@ -326,14 +326,34 @@ xlabel('Time (s)','FontSize',16)
 ylabel('Heart rate (bpm)','FontSize',16)
 colormap('hot')
 
-disp(['median HR across time  - max fit: ' num2str(median(60*fvec2(ceil(maxIdx))))])
-disp(['median HR across time  - max fit smoothed: ' num2str(median(60*fvec2(ceil(maxIdx_filt))))])
 
+maxFitHR = 60*fvec2(ceil(maxIdx));
+maxFitHRSmoothed = 60*fvec2(ceil(maxIdx_filt));
+
+disp(['median HR across time  - max fit: ' num2str(median(maxFitHR))])
+disp(['median HR across time  - max fit smoothed: ' num2str(median(maxFitHRSmoothed))])
+
+
+% loop trough time and pick power of largest power value and compare to
+% surrounding values
+exactPow = [];
+broadPow = [];
+outsidePow = [];
+snr = [];
+for tI = 1:length(maxIdx_filt)
+    exactPow(tI) = timeFreqData(round(maxIdx_filt(tI)),tI);
+    broadPow(tI) = nanmean(timeFreqData(round(maxIdx_filt(tI))-4:round(maxIdx_filt(tI))+4,tI));
+    outsidePow(tI) = nanmean([timeFreqData(1:round(maxIdx_filt(tI))-5,tI); timeFreqData(round(maxIdx_filt(tI))+5:end,tI)]);
+    snr(tI) = broadPow(tI)/outsidePow(tI);
+end
 
 tempData = zeros(prod(size(timeFreqData)),3);
 for k = 1:size(tempData,1)
     tempData(k,:) = [ceil(k/size(timeFreqData,1)) mod(k-1,size(timeFreqData,1))+1 timeFreqData(k)];
 end
+% tempData(:,1) = integer indicating time
+% tempData(:,2) = integer indicating frequency
+% tempData(:,3) = power
 
 selectData = tempData(:,3) > prctile(tempData(:,3),95);
 tempData = tempData(selectData,:);
@@ -345,9 +365,14 @@ weights = sqrt(tempData(:,3));
 %     P = polyfitweighted(tempData(:,1),tempData(:,2),1,weights);
 %     smoothx = linspace(min(tempData(:,1)),max(tempData(:,1)),100);
 %     smoothy = polyval(P,smoothx);
-%
+
+
+% convert values
 tempData(:,1) = tData(tempData(:,1));
 tempData(:,2) = fvec(tempData(:,2));
+% tempData(:,1) = actual time in TFA
+% tempData(:,2) = actual frequency in TFA
+
 P = polyfitweighted(tempData(:,1),tempData(:,2),1,weights);
 smoothx = linspace(min(tempData(:,1)),max(tempData(:,1)),size(timeFreqData,2));
 smoothy = polyval(P,smoothx);
@@ -358,6 +383,34 @@ plot([1:length(smoothy)],(smoothy-fvec(1))*(size(timeFreqData,1)/(fvec(end)-fvec
 legend('\color{green} Max','\color{blue} Smooth max','\color{white} SNR weighted','Location','SouthEast','Box','off','FontSize',16)
 % legend boxoff
 disp(['median HR across time - SNR weighted fit: ' num2str(median(60*smoothy))])
+
+
+%% plot signal noise ratio
+figure();
+subplot(2,2,1)
+plot(tData,exactPow,'m')
+hold on
+plot(tData,broadPow,'c')
+plot(tData,outsidePow,'g:')
+ylabel('Power')
+xlabel('Time (s)')
+legend('Exact','Broadband','Outside broadband')
+
+subplot(2,2,2)
+plot(tData,snr,'k')
+ylabel('Signal-to-noise-ratio')
+xlabel('Time (s)')
+legend()
+
+disp(['median signal-to-noise (SNR) ratio: ' num2str(median(snr))])
+disp(['median signal-to-noise (SNR) ratio with SNR>2: ' num2str(median(snr(snr>2)))])
+disp(['# timepoints with SNR>2: ' num2str(sum(snr>2)) ' out of ' num2str(length(snr))])
+
+maxFitHR = 60*fvec2(ceil(maxIdx));
+maxFitHRSmoothed = 60*fvec2(ceil(maxIdx_filt));
+
+disp(['median HR based on timepoints with SNR>2 - max fit: ' num2str(nanmedian(maxFitHR(snr>2)))])
+disp(['median HR based on timepoints with SNR>2 - max fit smoothed: ' num2str(nanmedian(maxFitHRSmoothed(snr>2)))])
 
 %%
 figure();
