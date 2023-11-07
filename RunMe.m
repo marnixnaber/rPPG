@@ -71,6 +71,7 @@ signalProcessing.HrDetectionMethod          = 'fastica';
 % 'ica' (see Poh, M. Z., McDuff, D. J., & Picard, R. W., 2010); 
 % 'pos' (see Wang, W., den Brinker, A. C., Stuijk, S., & de Haan, G., 2017; state-of-the-art rppg)
 
+signalProcessing.snr_threshold              = 2;        % For one of the HR estimation procedures, ignore HR measured at time points with signal noise ratio below a specified threshold
 
 signalProcessing.samplingRate               = 60;       % [frames per second] sampling rate: temporal resolution of pixel value signal will increase with interpolation to X Hz
 signalProcessing.interpMethod               = 'pchip';  % rPPG signal is always interpolated to a frequency of the sampling rate
@@ -380,7 +381,19 @@ smoothy = polyval(P,smoothx);
 % figure()
 % plot(smoothx,60*smoothy,'w','LineWidth',2)
 plot([1:length(smoothy)],(smoothy-fvec(1))*(size(timeFreqData,1)/(fvec(end)-fvec(1))),'w','LineWidth',2)
-legend('\color{green} Max','\color{blue} Smooth max','\color{white} SNR weighted','Location','SouthEast','Box','off','FontSize',16)
+
+if sum(snr>signalProcessing.snr_threshold) < 0.1*length(maxIdx_filt)
+    disp(['ERROR: not enough values above SNR specified threshold of ' num2str(signalProcessing.snr_threshold)])
+    disp(['Please consider lowering the threshold below ' num2str(max(snr))])
+end
+
+xDataTemp = [1:length(smoothy)];
+
+P3 = polyfit(xDataTemp(snr>signalProcessing.snr_threshold),maxIdx_filt(snr>signalProcessing.snr_threshold),4);
+plot(xDataTemp,polyval(P3,xDataTemp),'w--','LineWidth',3)
+
+
+legend('\color{green} Max','\color{cyan} Smooth max','\color{white} SNR weighted','\color{white} SNR threshold rejected','Location','SouthEast','Box','off','FontSize',16)
 % legend boxoff
 disp(['median HR across time - SNR weighted fit: ' num2str(median(60*smoothy))])
 
@@ -403,25 +416,29 @@ xlabel('Time (s)')
 legend()
 
 disp(['median signal-to-noise (SNR) ratio: ' num2str(median(snr))])
-disp(['median signal-to-noise (SNR) ratio with SNR>2: ' num2str(median(snr(snr>2)))])
-disp(['# timepoints with SNR>2: ' num2str(sum(snr>2)) ' out of ' num2str(length(snr))])
+disp(['median signal-to-noise (SNR) ratio with SNR>' num2str(signalProcessing.snr_threshold) ': ' num2str(median(snr(snr>signalProcessing.snr_threshold)))])
+disp(['# timepoints with SNR>' num2str(signalProcessing.snr_threshold) ': ' num2str(sum(snr>signalProcessing.snr_threshold)) ' out of ' num2str(length(snr))])
 
 maxFitHR = 60*fvec2(ceil(maxIdx));
 maxFitHRSmoothed = 60*fvec2(ceil(maxIdx_filt));
 
-disp(['median HR based on timepoints with SNR>2 - max fit: ' num2str(nanmedian(maxFitHR(snr>2)))])
-disp(['median HR based on timepoints with SNR>2 - max fit smoothed: ' num2str(nanmedian(maxFitHRSmoothed(snr>2)))])
+disp(['median HR based on timepoints with SNR>' num2str(signalProcessing.snr_threshold) ' - max fit: ' num2str(nanmedian(maxFitHR(snr>signalProcessing.snr_threshold)))])
+disp(['median HR based on timepoints with SNR>' num2str(signalProcessing.snr_threshold) ' - max fit smoothed: ' num2str(nanmedian(maxFitHRSmoothed(snr>signalProcessing.snr_threshold)))])
 
 %%
 figure();
 plot(tData,60*fvec2(ceil(maxIdx)),'g:')
 hold on
-plot(tData,60*fvec2(ceil(maxIdx_filt)),'b--')
-%set(gca,'yticklabel',[50:10:120],'FontSize',12)
-plot(tData,60*smoothy,'r')
+plot(tData,60*fvec2(ceil(maxIdx_filt)),'c--')
+% set(gca,'yticklabel',[50:10:120],'FontSize',12)
+% set(gca,'yticklabel',[min(60*fvec2(ceil(maxIdx))):10:max(60*fvec2(ceil(maxIdx)))],'FontSize',12)
+plot(tData,60*smoothy,'k')
+
+P2 = polyfit(tData(snr>signalProcessing.snr_threshold),60*fvec2(ceil(maxIdx_filt(snr>signalProcessing.snr_threshold)))',4);
+plot(tData,polyval(P2,tData),'k--')
+
 ylabel('Heart Rate (BPM)','FontSize',16)
 xlabel('Time (s)','FontSize',16)
-legend('Max','Smooth max','SNR weighted','FontSize',16)
-
+legend('Max','Smooth max','SNR weighted','SNR threshold rejected','FontSize',16)
 
 %% 
